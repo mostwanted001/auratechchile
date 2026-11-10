@@ -1,0 +1,100 @@
+<div class="bg-aura px-4 py-2 text-center text-xs font-semibold tracking-wide text-white">
+  Paga al recibir · Envío gratis a todo Chile · Garantía 6 meses
+</div>
+
+<header
+  class="sticky top-0 z-30 transition-colors duration-300"
+  [class.-mb-16]="isHome()"
+  [class]="solid()
+    ? 'border-b border-white/10 bg-navy-950/90 backdrop-blur-md'
+    : 'border-b border-transparent bg-transparent'"
+>
+  <div class="mx-auto grid h-16 max-w-screen-2xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 text-white md:px-8">
+
+    <!-- Izquierda (solo mobile): menú + búsqueda -->
+    <div class="col-start-1 row-start-1 flex items-center gap-1 justify-self-start lg:hidden">
+      <button type="button" class="icon-btn" aria-label="Abrir menú" (click)="menuOpen.set(true)">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+      <button type="button" class="icon-btn" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Logo: centro en mobile, izquierda en desktop -->
+    <a routerLink="/"
+       class="col-start-2 row-start-1 justify-self-center lg:col-start-1 lg:justify-self-start"
+       [attr.aria-label]="brand.name + ', inicio'">
+      <img [ngSrc]="brand.logo" [alt]="brand.name" width="133" height="40" priority class="h-8 w-auto lg:h-10" />
+    </a>
+
+    <!-- Centro (solo desktop): categorías -->
+    <nav class="col-start-2 row-start-1 hidden items-center gap-7 lg:flex">
+      @for (item of nav; track item.link) {
+        <a [routerLink]="item.link"
+           routerLinkActive="!text-white"
+           [routerLinkActiveOptions]="{ exact: item.link === '/' }"
+           class="text-[15px] font-medium whitespace-nowrap text-navy-200 transition hover:text-white">
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Derecha: (búsqueda en desktop) + cuenta + carrito -->
+    <div class="col-start-3 row-start-1 flex items-center gap-1 justify-self-end">
+      <button type="button" class="icon-btn hidden lg:grid" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+        </svg>
+      </button>
+      <a routerLink="/cuenta" class="icon-btn" aria-label="Mi cuenta">
+        <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+        </svg>
+      </a>
+      <button type="button" class="icon-btn relative" aria-label="Carrito">
+        <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" />
+        </svg>
+        <span class="absolute -top-0.5 -right-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-cta px-1 text-[10px] font-bold">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Menú lateral mobile -->
+@if (menuOpen()) {
+  <div class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden" (click)="menuOpen.set(false)"></div>
+
+  <aside class="fixed inset-y-0 left-0 z-50 flex w-80 max-w-[85vw] flex-col bg-navy-950 text-white shadow-2xl lg:hidden"
+         role="dialog" aria-modal="true" aria-label="Menú">
+    <div class="flex h-16 items-center justify-between border-b border-white/10 px-4">
+      <img [ngSrc]="brand.logo" [alt]="brand.name" width="107" height="32" class="h-8 w-auto" />
+      <button type="button" class="icon-btn" aria-label="Cerrar menú" (click)="menuOpen.set(false)">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex flex-col p-4">
+      @for (item of nav; track item.link) {
+        <a [routerLink]="item.link"
+           routerLinkActive="!text-white bg-white/5"
+           [routerLinkActiveOptions]="{ exact: item.link === '/' }"
+           class="rounded-xl px-4 py-3.5 text-lg font-medium text-navy-200 transition hover:bg-white/5 hover:text-white">
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="mt-auto border-t border-white/10 p-6 text-sm text-navy-200">
+      <p class="font-semibold text-white">Paga al recibir</p>
+      <p>Envío gratis a todo Chile</p>
+    </div>
+  </aside>
+}

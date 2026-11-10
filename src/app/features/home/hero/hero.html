@@ -1,0 +1,42 @@
+<section class="relative isolate overflow-hidden bg-navy-950 text-white">
+  <!-- Imagen de fondo -->
+  <img [ngSrc]="bg" alt="" fill priority sizes="100vw"
+       class="-z-20 object-cover object-center" />
+
+  <!-- Capa para legibilidad -->
+  <div class="absolute inset-0 -z-10 bg-linear-to-r from-navy-950 via-navy-950/85 to-navy-950/40"></div>
+
+  <!-- Halo de marca -->
+  <div class="pointer-events-none absolute -top-40 right-[-10%] -z-10 h-[520px] w-[520px] rounded-full bg-aura opacity-20 blur-3xl"></div>
+
+  <div class="mx-auto max-w-7xl px-5 py-20 md:py-28">
+    <p class="mb-4 text-xs font-semibold uppercase tracking-[.2em] text-aura-cyan">
+      Tecnología para tu día a día
+    </p>
+
+    <h1 class="max-w-3xl text-4xl leading-[1.05] font-bold !text-white md:text-6xl">
+      Tecnología práctica <span class="text-aura">para tu hogar</span>
+    </h1>
+
+    <p class="mt-6 max-w-xl text-lg text-navy-200">
+      Seguridad, limpieza y bienestar en productos simples de usar, con despacho a todo Chile.
+    </p>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a routerLink="/collections/seguridad-del-hogar" class="btn-cta">Ver productos</a>
+      <a routerLink="/collections/bienestar" class="btn-ghost">Bienestar</a>
+    </div>
+
+    <ul class="mt-16 grid gap-6 border-t border-white/10 pt-8 sm:grid-cols-3">
+      @for (perk of perks; track perk.title) {
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-aura-cyan"></span>
+          <div>
+            <p class="font-semibold">{{ perk.title }}</p>
+            <p class="text-sm text-navy-200">{{ perk.text }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

@@ -1,1 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow", "Inter", sans-serif;
+
+  /* Marca (logo) */
+  --color-aura-violet: #8b3dff;
+  --color-aura-blue: #4f7cf0;
+  --color-aura-cyan: #22d3c5;
+
+  --color-navy-950: #030d17;
+  --color-navy-900: #0f172a;
+  --color-navy-800: #0c345a;   /* marino principal */
+  --color-navy-600: #1f4e79;
+  --color-navy-400: #435d70;
+  --color-navy-200: #cbd9e6;
+  --color-navy-100: #e1e8ed;
+  --color-navy-50:  #eef2f7;
+
+  --color-cta: #ea580c;        /* naranja: SOLO acciones de compra */
+  --color-cta-hover: #c2410c;
+
+  --radius-card: 16px;
+}
+
+@layer base {
+  body { @apply bg-white font-sans text-navy-950 antialiased; }
+  h1, h2, h3 { @apply font-display font-semibold tracking-tight text-navy-900; }
+}
+
+@layer components {
+  .text-aura { @apply bg-linear-to-r from-aura-violet via-aura-blue to-aura-cyan bg-clip-text text-transparent; }
+  .bg-aura { @apply bg-linear-to-r from-aura-violet via-aura-blue to-aura-cyan; }
+  .btn-cta { @apply inline-flex items-center justify-center gap-2 rounded-full bg-cta px-6 py-3 font-semibold text-white transition hover:bg-cta-hover active:scale-[.98]; }
+  .btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10; }
+  .icon-btn { @apply grid h-10 w-10 place-items-center rounded-full transition hover:bg-white/10; }
+}
+
+

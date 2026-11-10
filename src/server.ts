@@ -12,21 +12,41 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
+app.set('trust proxy', true);
 
-/**
- * Serve static files from /browser
- */
+const STORE = process.env['SHOPIFY_STORE_DOMAIN'];
+const VERSION = process.env['SHOPIFY_API_VERSION'] ?? '2026-10';
+const PRIVATE_TOKEN = process.env['SHOPIFY_STOREFRONT_PRIVATE_TOKEN'];
+
+app.post('/api/storefront', express.json({ limit: '50kb' }), async (req, res) => {
+  if (!STORE || !PRIVATE_TOKEN) {
+    res.status(500).json({ errors: [{ message: 'Faltan variables de entorno de Shopify' }] });
+    return;
+  }
+
+  const { query, variables } = req.body ?? {};
+  if (typeof query !== 'string') {
+    res.status(400).json({ errors: [{ message: 'Query inválida' }] });
+    return;
+  }
+
+  try {
+    const upstream = await fetch(`https://${STORE}/api/${VERSION}/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Shopify-Storefront-Private-Token': PRIVATE_TOKEN,
+        ...(req.ip ? { 'Shopify-Storefront-Buyer-IP': req.ip } : {}),
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+    res.status(upstream.status).type('application/json').send(await upstream.text());
+  } catch (err) {
+    console.error('[storefront]', err);
+    res.status(502).json({ errors: [{ message: 'No se pudo contactar a Shopify' }] });
+  }
+});
+
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',

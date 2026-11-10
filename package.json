@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "dev": "node --env-file=.env node_modules/@angular/cli/bin/ng.js serve",
     "serve:ssr:aura-tech": "node dist/aura-tech/server/server.mjs"
   },
   "private": true,
@@ -28,10 +29,14 @@
     "@angular/build": "^22.0.5",
     "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.0",
+    "@tailwindcss/postcss": "^4.3.5",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^28.0.0",
+    "postcss": "^8.5.32",
     "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.3.5",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
   }
