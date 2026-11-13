@@ -6,6 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { codOrderHandler } from './server/cod-order';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -86,3 +87,5 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+app.post('/api/cod-order', express.json({ limit: '10kb' }), codOrderHandler);

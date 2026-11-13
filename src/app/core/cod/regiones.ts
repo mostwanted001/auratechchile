@@ -1,0 +1,18 @@
+export const REGIONES = [
+  { code: 'AP', name: 'Arica y Parinacota' },
+  { code: 'TA', name: 'Tarapacá' },
+  { code: 'AN', name: 'Antofagasta' },
+  { code: 'AT', name: 'Atacama' },
+  { code: 'CO', name: 'Coquimbo' },
+  { code: 'VS', name: 'Valparaíso' },
+  { code: 'RM', name: 'Región Metropolitana' },
+  { code: 'LI', name: "O'Higgins" },
+  { code: 'ML', name: 'Maule' },
+  { code: 'NB', name: 'Ñuble' },
+  { code: 'BI', name: 'Biobío' },
+  { code: 'AR', name: 'La Araucanía' },
+  { code: 'LR', name: 'Los Ríos' },
+  { code: 'LL', name: 'Los Lagos' },
+  { code: 'AI', name: 'Aysén' },
+  { code: 'MA', name: 'Magallanes' },
+] as const;

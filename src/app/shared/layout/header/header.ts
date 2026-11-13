@@ -4,6 +4,7 @@ import { BRAND } from '../../../core/shopify/brands';
 import { NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, tap } from 'rxjs';
+import { CartStore } from '../../../core/cart/cart.store';
 
 
 @Component({
@@ -16,6 +17,9 @@ import { filter, map, tap } from 'rxjs';
 })
 export class Header {
   private readonly router = inject(Router);
+
+  protected readonly cart = inject(CartStore);
+
   protected readonly nav = [
     { label: 'Inicio', link: '/' },
     { label: 'Seguridad', link: '/collections/seguridad-del-hogar' },

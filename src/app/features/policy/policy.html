@@ -1,0 +1,43 @@
+<section class="mx-auto grid max-w-6xl gap-10 px-5 py-12 md:grid-cols-[220px_1fr] md:py-16">
+
+  <!-- Menú lateral -->
+  <nav aria-label="Políticas" class="md:sticky md:top-24 md:self-start">
+    <p class="mb-3 text-xs font-semibold tracking-[.15em] text-navy-400 uppercase">Ayuda</p>
+    <ul class="flex gap-2 overflow-x-auto md:flex-col md:gap-1">
+      @for (l of links; track l.handle) {
+        <li>
+          <a [routerLink]="['/politicas', l.handle]"
+             class="block rounded-full px-4 py-2 text-sm whitespace-nowrap transition md:rounded-xl"
+             [class.bg-navy-900]="handle() === l.handle"
+             [class.text-white]="handle() === l.handle"
+             [class.text-navy-800]="handle() !== l.handle"
+             [class.hover:bg-navy-50]="handle() !== l.handle">
+            {{ l.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- Contenido -->
+  <article>
+    @if (policy(); as p) {
+      <h1 class="mb-8 text-3xl md:text-4xl">{{ p.title }}</h1>
+      <div class="max-w-3xl leading-relaxed text-navy-800
+                  [&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-navy-900
+                  [&_h3]:mt-8 [&_h3]:mb-2 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-navy-900
+                  [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:space-y-2 [&_ol]:mb-4 [&_ol]:space-y-2
+                  [&_li]:ml-5 [&_ul_li]:list-disc [&_ol_li]:list-decimal
+                  [&_a]:text-aura-blue [&_a]:underline [&_strong]:text-navy-900"
+           [innerHTML]="p.body"></div>
+    } @else if (policy() === null) {
+      <h1 class="text-3xl">Página no encontrada</h1>
+      <a routerLink="/" class="btn-cta mt-6">Volver al inicio</a>
+    } @else {
+      <div class="space-y-4">
+        <div class="h-10 w-1/2 animate-pulse rounded-lg bg-navy-50"></div>
+        @for (_ of [1,2,3,4,5]; track $index) { <div class="h-4 animate-pulse rounded bg-navy-50"></div> }
+      </div>
+    }
+  </article>
+</section>

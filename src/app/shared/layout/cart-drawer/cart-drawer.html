@@ -1,0 +1,117 @@
+<!-- Fondo oscuro -->
+<div class="fixed inset-0 z-40 bg-navy-950/50 backdrop-blur-sm transition-opacity duration-300"
+     [class.opacity-0]="!cart.open()"
+     [class.pointer-events-none]="!cart.open()"
+     (click)="close()"></div>
+
+<!-- Panel -->
+<aside class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col bg-white shadow-2xl transition-transform duration-300 ease-out"
+       [class.translate-x-full]="!cart.open()"
+       [inert]="!cart.open()"
+       role="dialog" aria-modal="true" aria-label="Carrito de compras">
+
+  <!-- Encabezado -->
+  <header class="flex h-16 items-center justify-between border-b border-navy-100 px-5">
+    <h2 class="text-lg">
+      Tu carrito
+      @if (cart.count() > 0) { <span class="text-navy-400">({{ cart.count() }})</span> }
+    </h2>
+    <button type="button" class="grid h-10 w-10 place-items-center rounded-full text-navy-900 transition hover:bg-navy-50"
+            (click)="close()" aria-label="Cerrar carrito">
+      <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
+    </button>
+  </header>
+
+  @if (cart.isEmpty()) {
+    <!-- Carrito vacío -->
+    <div class="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
+      <div class="grid h-16 w-16 place-items-center rounded-full bg-navy-50 text-navy-400">
+        <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" />
+        </svg>
+      </div>
+      <p class="font-semibold text-navy-900">Tu carrito está vacío</p>
+      <p class="text-sm text-navy-400">Descubre nuestros productos para tu hogar.</p>
+      <a routerLink="/catalogo" class="btn-cta mt-2" (click)="close()">Ver productos</a>
+    </div>
+
+  } @else {
+    <!-- Envío gratis -->
+    <div class="bg-linear-to-r from-aura-violet/10 to-aura-cyan/10 px-5 py-2.5 text-center text-sm font-medium text-navy-800">
+      ✓ Tu pedido tiene <strong>envío gratis</strong> a todo Chile
+    </div>
+
+    <!-- Productos -->
+    <ul class="flex-1 divide-y divide-navy-100 overflow-y-auto px-5">
+      @for (line of cart.lines(); track line.id) {
+        <li class="flex gap-4 py-5">
+          <a [routerLink]="['/products', line.merchandise.product.handle]" (click)="close()"
+             class="shrink-0 overflow-hidden rounded-xl bg-navy-50 p-1">
+            @if (line.merchandise.image; as img) {
+              <img [ngSrc]="img.url" [alt]="img.altText ?? line.merchandise.product.title"
+                   width="80" height="80" class="h-20 w-20 object-contain mix-blend-multiply" />
+            }
+          </a>
+
+          <div class="flex min-w-0 flex-1 flex-col">
+            <div class="flex items-start justify-between gap-3">
+              <a [routerLink]="['/products', line.merchandise.product.handle]" (click)="close()"
+                 class="line-clamp-2 text-sm font-medium text-navy-900 hover:underline">
+                {{ line.merchandise.product.title }}
+              </a>
+              <button type="button" class="shrink-0 text-navy-400 transition hover:text-cta disabled:opacity-40"
+                      (click)="cart.remove(line.id)" [disabled]="cart.busy()" aria-label="Quitar producto">
+                <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" />
+                </svg>
+              </button>
+            </div>
+
+            @if (line.merchandise.title !== 'Default Title') {
+              <p class="text-xs text-navy-400">{{ line.merchandise.title }}</p>
+            }
+
+            <div class="mt-auto flex items-center justify-between pt-3">
+              <div class="flex items-center rounded-full border border-navy-100">
+                <button type="button" class="grid h-8 w-8 place-items-center text-navy-900 disabled:opacity-30"
+                        (click)="cart.updateQuantity(line.id, line.quantity - 1)" [disabled]="cart.busy()"
+                        aria-label="Quitar uno">−</button>
+                <span class="w-6 text-center text-sm font-semibold tabular-nums">{{ line.quantity }}</span>
+                <button type="button" class="grid h-8 w-8 place-items-center text-navy-900 disabled:opacity-30"
+                        (click)="cart.updateQuantity(line.id, line.quantity + 1)" [disabled]="cart.busy()"
+                        aria-label="Agregar uno">+</button>
+              </div>
+              <span class="font-semibold text-navy-900">{{ line.cost.totalAmount | money }}</span>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <!-- Resumen -->
+    <footer class="border-t border-navy-100 p-5">
+      @if (cart.error(); as err) {
+        <p class="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{{ err }}</p>
+      }
+
+      <div class="flex items-baseline justify-between">
+        <span class="text-navy-800">Subtotal</span>
+        <span class="text-xl font-bold text-navy-900">{{ cart.subtotal() | money }}</span>
+      </div>
+      <p class="mt-1 text-xs text-navy-400">Envío gratis. Impuestos incluidos.</p>
+
+      <button type="button" class="btn-cta mt-4 w-full flex-col gap-0 py-3.5"
+              (click)="cart.checkout()" [disabled]="cart.busy()">
+        <span class="text-base">Finalizar compra</span>
+        <span class="text-xs font-medium opacity-90">Paga al recibir o con tarjeta</span>
+      </button>
+
+      <button type="button" class="mt-2 w-full py-2 text-sm font-medium text-navy-400 transition hover:text-navy-900"
+              (click)="close()">
+        Seguir comprando
+      </button>
+    </footer>
+  }
+</aside>

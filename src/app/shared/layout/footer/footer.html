@@ -1,0 +1,94 @@
+<footer class="relative isolate overflow-hidden bg-navy-950 text-navy-200">
+  <!-- Halo sutil de marca -->
+  <div class="pointer-events-none absolute -top-32 left-1/2 -z-10 h-64 w-[700px] -translate-x-1/2 rounded-full bg-aura opacity-10 blur-3xl"></div>
+
+  <!-- Newsletter -->
+  <div class="border-b border-white/10">
+    <div class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-12 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-2xl !text-white">Mantente conectado</h2>
+        <p class="mt-1 text-sm">Ofertas y novedades antes que nadie. Sin spam.</p>
+      </div>
+      <form class="flex w-full max-w-md gap-2" (submit)="$event.preventDefault()">
+        <label for="nl-email" class="sr-only">Correo electrónico</label>
+        <input id="nl-email" type="email" required placeholder="Tu correo electrónico" autocomplete="email"
+               class="min-w-0 flex-1 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white placeholder:text-navy-400
+                      outline-none transition focus:border-aura-cyan focus:ring-4 focus:ring-aura-cyan/15" />
+        <button type="submit" class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-aura text-white transition hover:opacity-90"
+                aria-label="Suscribirme">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Columnas -->
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-5 py-14 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+
+    <!-- Marca -->
+    <div class="col-span-2 lg:col-span-1">
+      <img [ngSrc]="brand.logo" [alt]="brand.name" width="133" height="40" class="h-10 w-auto" />
+      <p class="mt-4 max-w-xs text-sm leading-relaxed">
+        Tecnología práctica para tu hogar: seguridad, limpieza y bienestar, con envío gratis a todo Chile.
+      </p>
+      <div class="mt-6 flex gap-2">
+        <a [href]="brand.social.facebook" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8a0 0 0 0 1 0 0Z"/></svg>
+        </a>
+        <a [href]="brand.social.instagram" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
+        <a [href]="brand.social.tiktok" target="_blank" rel="noopener" aria-label="TikTok" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path d="M16 3c.3 2.2 1.7 3.8 4 4v3.2c-1.5 0-2.9-.4-4-1.1V15a6 6 0 1 1-6-6c.3 0 .7 0 1 .1v3.3a2.8 2.8 0 1 0 2 2.6V3h3Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tienda -->
+    <nav aria-label="Tienda">
+      <h3 class="footer-title">Tienda</h3>
+      <ul class="space-y-3 text-sm">
+        @for (item of shop; track item.link) {
+          <li><a [routerLink]="item.link" class="footer-link">{{ item.label }}</a></li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Ayuda -->
+    <nav aria-label="Ayuda">
+      <h3 class="footer-title">Ayuda</h3>
+      <ul class="space-y-3 text-sm">
+        @for (item of help; track item.link) {
+          <li><a [routerLink]="item.link" class="footer-link">{{ item.label }}</a></li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Contacto -->
+    <div class="col-span-2 lg:col-span-1">
+      <h3 class="footer-title">Contacto</h3>
+      <ul class="space-y-3 text-sm">
+        <li>
+          <a [href]="waLink" target="_blank" rel="noopener" class="footer-link inline-flex items-center gap-2">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 text-aura-cyan" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.2 1.4Z"/></svg>
+            {{ brand.whatsappDisplay }}
+          </a>
+        </li>
+        <li><a [href]="'mailto:' + brand.email" class="footer-link break-all">{{ brand.email }}</a></li>
+        <li class="text-navy-200/70">{{ brand.hours }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Barra inferior -->
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-5 py-6 text-xs text-navy-400 md:flex-row md:justify-between">
+      <p>© {{ year }} AuraTechChile. Todos los derechos reservados.</p>
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <span class="pay-chip">Mercado Pago</span>
+        <span class="pay-chip">Pago contra entrega</span>
+        <span class="pay-chip">Envío gratis</span>
+      </div>
+    </div>
+  </div>
+</footer>

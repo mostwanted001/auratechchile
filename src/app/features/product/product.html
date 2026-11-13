@@ -1,0 +1,123 @@
+@if (product(); as p) {
+  <section class="mx-auto grid max-w-7xl gap-10 px-5 py-8 md:grid-cols-2 md:gap-16 md:py-14">
+
+    <!-- Galería -->
+    <div class="grid gap-3">
+      <div class="relative aspect-square overflow-hidden rounded-card bg-navy-50">
+        @if (activeImage(); as img) {
+          <img [ngSrc]="img.url" [alt]="img.altText ?? p.title" fill priority
+               sizes="(max-width: 768px) 100vw, 50vw"
+               class="object-contain p-6 mix-blend-multiply" />
+        }
+        @if (onSale()) {
+          <span class="absolute top-4 left-4 rounded-full bg-cta px-3 py-1 text-xs font-bold text-white">Oferta</span>
+        }
+      </div>
+
+      @if (p.images.nodes.length > 1) {
+        <div class="grid grid-cols-5 gap-3">
+          @for (img of p.images.nodes; track img.url) {
+            <button type="button" (click)="activeImage.set(img)"
+                    [attr.aria-label]="'Ver imagen ' + ($index + 1)"
+                    class="aspect-square overflow-hidden rounded-xl bg-navy-50 p-1.5 ring-2 transition"
+                    [class.ring-aura-blue]="activeImage()?.url === img.url"
+                    [class.ring-transparent]="activeImage()?.url !== img.url">
+              <img [src]="img.url + '&width=200'" [alt]="img.altText ?? ''"
+                   loading="lazy" width="200" height="200"
+                   class="h-full w-full object-contain mix-blend-multiply" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Info (se queda fija al hacer scroll en desktop) -->
+    <div class="md:sticky md:top-24 md:self-start">
+      <h1 class="text-2xl leading-tight md:text-4xl">{{ p.title }}</h1>
+
+      @if (variant(); as v) {
+        <div class="mt-4 flex flex-wrap items-baseline gap-3">
+          <span class="text-3xl font-bold text-navy-900">{{ v.price | money }}</span>
+          @if (onSale()) {
+            <s class="text-lg text-navy-400">{{ v.compareAtPrice | money }}</s>
+          }
+        </div>
+        <p class="mt-1 text-sm text-navy-400">Envío gratis incluido</p>
+      }
+
+      <!-- Cantidad + CTA -->
+      <div class="mt-8 flex gap-3">
+        <div class="flex items-center rounded-full border border-navy-100">
+          <button type="button" class="grid h-12 w-12 place-items-center text-xl text-navy-900 disabled:opacity-30"
+                  (click)="changeQty(-1)" [disabled]="quantity() <= 1" aria-label="Quitar uno">−</button>
+          <span class="w-8 text-center font-semibold tabular-nums">{{ quantity() }}</span>
+          <button type="button" class="grid h-12 w-12 place-items-center text-xl text-navy-900"
+                  (click)="changeQty(1)" aria-label="Agregar uno">+</button>
+        </div>
+
+        <button type="button" class="btn-cta flex-1 ..." (click)="addToCart()"
+        [disabled]="!variant()?.availableForSale || cart.busy()">
+  {{ cart.busy() ? 'Agregando…' : 'Añadir al carrito' }}
+</button>
+      </div>
+
+    <!-- Pedir con pago contra entrega -->
+    <button type="button" (click)="codOpen.set(true)" class="group mt-3 flex w-full items-center gap-4 rounded-card border border-aura-cyan/30
+           bg-linear-to-r from-aura-violet/5 to-aura-cyan/10 p-4 text-left
+           transition duration-200
+           hover:-translate-y-0.5 hover:border-aura-blue/60 hover:shadow-lg hover:shadow-aura-blue/10
+           active:translate-y-0
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aura-blue
+           disabled:pointer-events-none disabled:opacity-50" [disabled]="!variant()?.availableForSale || cart.busy()">
+      <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-navy-950 text-white
+           transition group-hover:bg-aura">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 7h13v10H3zM16 10h3l2 3v4h-5" />
+          <circle cx="7" cy="18" r="1.5" />
+          <circle cx="18" cy="18" r="1.5" />
+        </svg>
+      </span>
+
+      <span class="flex-1">
+        <span class="block font-semibold text-navy-900">Pide hoy y paga al recibir</span>
+        <span class="block text-sm text-navy-400">Sin pagar online. Pagas cuando llega a tu puerta.</span>
+      </span>
+
+      <svg viewBox="0 0 24 24"
+        class="h-5 w-5 shrink-0 text-navy-400 transition group-hover:translate-x-1 group-hover:text-aura-blue" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m9 6 6 6-6 6" />
+      </svg>
+    </button>
+
+      <!-- Garantías -->
+      <ul class="mt-6 grid gap-3 text-sm text-navy-800">
+        <li class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-aura-cyan"></span>Envío gratis a todo Chile</li>
+        <li class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-aura-cyan"></span>Garantía legal de 6 meses</li>
+        <li class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-aura-cyan"></span>Atención por WhatsApp</li>
+      </ul>
+
+      <!-- Descripción -->
+      @if (p.descriptionHtml) {
+        <div class="mt-10 border-t border-navy-100 pt-8">
+          <h2 class="mb-4 text-lg">Descripción</h2>
+          <div class="space-y-3 leading-relaxed text-navy-800 [&_li]:ml-5 [&_li]:list-disc [&_strong]:text-navy-900"
+               [innerHTML]="p.descriptionHtml"></div>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (codOpen() && variant(); as v) {
+    <app-cod-modal
+      [variantId]="v.id"
+      [title]="p.title"
+      [price]="v.price"
+      [image]="activeImage()"
+      [initialQty]="quantity()"
+      (closed)="codOpen.set(false)" />
+  }
+
+}
+
