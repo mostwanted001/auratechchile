@@ -1,0 +1,13 @@
+<button type="button" (click)="open()" aria-label="Escríbenos por WhatsApp"
+        class="group fixed right-4 z-30 flex items-center gap-2 rounded-full bg-[#25D366] p-3.5 text-white
+               shadow-lg shadow-black/20 transition hover:scale-105 hover:shadow-xl md:right-6 md:bottom-6"
+        [class.bottom-24]="onProduct()"
+        [class.bottom-4]="!onProduct()">
+  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor">
+    <path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.8-1.1-4.6-4-4.8-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.2 1.4Z"/>
+  </svg>
+  <!-- Texto que aparece al pasar el mouse (solo desktop) -->
+  <span class="hidden max-w-0 overflow-hidden text-sm font-semibold whitespace-nowrap transition-all duration-300 group-hover:max-w-40 md:inline">
+    ¿Dudas? Escríbenos
+  </span>
+</button>

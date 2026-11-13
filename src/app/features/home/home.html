@@ -1,7 +1,18 @@
 
 <app-hero />
-<section class="mx-auto max-w-7xl px-5 py-10">
-
+<app-guarantees />
+<section class="mx-auto max-w-7xl px-5 py-16 md:py-20">
+  <div class="mb-10 flex items-end justify-between gap-4">
+    <div>
+      <p class="text-xs font-semibold tracking-[.2em] text-aura-blue uppercase">Lo más pedido</p>
+      <h2 class="mt-2 text-3xl md:text-4xl">Más vendidos</h2>
+    </div>
+    <a routerLink="/catalogo"
+       class="group hidden items-center gap-1 text-sm font-semibold text-navy-800 hover:text-navy-900 sm:inline-flex">
+      Ver todo
+      <span class="transition group-hover:translate-x-1">→</span>
+    </a>
+  </div>
   <div class="grid grid-cols-2 gap-x-5 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
     @for (p of products(); track p.id; let i = $index) {
       <app-product-card [product]="p" [priority]="i < 4" />
@@ -12,3 +23,5 @@
     }
   </div>
 </section>
+
+<app-cod-steps />

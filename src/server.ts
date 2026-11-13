@@ -48,6 +48,52 @@ app.post('/api/storefront', express.json({ limit: '50kb' }), async (req, res) =>
   }
 });
 
+
+const SITE = 'https://auratechchile.cl';
+
+app.get('/sitemap.xml', async (_req, res) => {
+  try {
+    const r = await fetch(`https://${STORE}/api/${VERSION}/graphql.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Shopify-Storefront-Private-Token': PRIVATE_TOKEN! },
+      body: JSON.stringify({
+        query: `{
+          products(first: 250) { nodes { handle updatedAt } }
+          collections(first: 50) { nodes { handle updatedAt } }
+        }`,
+      }),
+    });
+    const { data } = (await r.json()) as {
+      data: { products: { nodes: { handle: string; updatedAt: string }[] }; collections: { nodes: { handle: string; updatedAt: string }[] } };
+    };
+
+    const hidden = ['frontpage', 'electronics-and-accessories-example-products'];
+    const urls: { loc: string; lastmod?: string; priority: string }[] = [
+      { loc: '/', priority: '1.0' },
+      { loc: '/catalogo', priority: '0.8' },
+      { loc: '/contacto', priority: '0.5' },
+      ...['envios', 'reembolsos', 'terminos', 'privacidad'].map((h) => ({ loc: `/politicas/${h}`, priority: '0.3' })),
+      ...data.collections.nodes
+        .filter((c) => !hidden.includes(c.handle))
+        .map((c) => ({ loc: `/collections/${c.handle}`, lastmod: c.updatedAt, priority: '0.8' })),
+      ...data.products.nodes.map((p) => ({ loc: `/products/${p.handle}`, lastmod: p.updatedAt, priority: '0.9' })),
+    ];
+
+    const xml =
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+      urls
+        .map((u) => `  <url><loc>${SITE}${u.loc}</loc>${'lastmod' in u && u.lastmod ? `<lastmod>${u.lastmod.slice(0, 10)}</lastmod>` : ''}<priority>${u.priority}</priority></url>`)
+        .join('\n') +
+      `\n</urlset>`;
+
+    res.type('application/xml').set('Cache-Control', 'public, max-age=3600').send(xml);
+  } catch (err) {
+    console.error('[sitemap]', err);
+    res.status(500).send('Error generando sitemap');
+  }
+});
+
+
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',

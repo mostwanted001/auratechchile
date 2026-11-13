@@ -15,4 +15,5 @@ export const BRAND = {
       instagram: 'https://www.instagram.com/auratech.1chile',
       tiktok: 'https://www.tiktok.com/@auratechchile',
     },
+    accountUrl: 'https://shopify.com/87959240897/account',
 } as const;

@@ -1,10 +1,10 @@
 @let p = product();
 <a [routerLink]="['/products', p.handle]" class="group grid gap-2">
-  <div class="relative aspect-square overflow-hidden rounded-card bg-surface">
+  <div class="relative aspect-square overflow-hidden rounded-card bg-navy-50">
     @if (p.featuredImage; as img) {
       <img [ngSrc]="img.url" [alt]="img.altText ?? p.title" fill
            sizes="(max-width: 768px) 50vw, 25vw" [priority]="priority()"
-           class="object-cover transition-transform duration-500 group-hover:scale-105" />
+           class="object-contain p-4 mix-blend-multiply transition-transform duration-500 group-hover:scale-105" />
     }
   </div>
   <h3 class="text-sm font-medium leading-snug md:text-[15px]">{{ p.title }}</h3>

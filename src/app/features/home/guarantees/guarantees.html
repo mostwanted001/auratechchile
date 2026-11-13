@@ -1,0 +1,17 @@
+<section class="border-y border-navy-100 bg-navy-50/60">
+  <ul class="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-8 px-5 py-10 md:grid-cols-4 md:py-12">
+    @for (g of items; track g.title) {
+      <li class="flex flex-col items-center gap-3 text-center md:flex-row md:items-start md:text-left">
+        <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-navy-800 shadow-sm ring-1 ring-navy-100">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="g.icon" />
+          </svg>
+        </span>
+        <div>
+          <p class="font-semibold text-navy-900">{{ g.title }}</p>
+          <p class="text-sm text-navy-400">{{ g.text }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+</section>

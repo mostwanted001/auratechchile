@@ -5,6 +5,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ProductCard as Product } from '../../core/shopify/types';
 import { map } from 'rxjs';
 import { Hero } from './hero/hero';
+import { Guarantees } from './guarantees/guarantees';
+import { CodSteps } from './cod-steps/cod-steps';
+import { RouterLink } from '@angular/router';
 
 const HOME_QUERY = `
   query Home @inContext(country: CL, language: ES) {
@@ -20,7 +23,7 @@ const HOME_QUERY = `
 
 
 @Component({
-  imports: [ProductCard, Hero],
+  imports: [ProductCard, Hero, Guarantees, CodSteps, RouterLink],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',

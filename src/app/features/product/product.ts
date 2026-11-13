@@ -1,19 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
 import { MoneyPipe } from '../../shared/ui/product-card/money.pipe';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { StorefrontClient } from '../../core/shopify/storefront.client';
 import { ProductDetail } from '../../core/shopify/types';
-import { map, switchMap } from 'rxjs';
+import { tap, switchMap, map } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
 import { CartStore } from '../../core/cart/cart.store';
 import { RouterLink } from '@angular/router';
 import { CodModal } from './cod-modal/cod-modal';
+import { SeoService } from '../../core/seo/seo.service';
+import { BRAND } from '../../core/shopify/brands';
 
-
-const PRODUCT_QUERY = `
+ const PRODUCT_QUERY = `
   query Product($handle: String!) @inContext(country: CL, language: ES) {
     product(handle: $handle) {
       id handle title description descriptionHtml
+      seo { title description }
       images(first: 10) { nodes { url altText width height } }
       options { name optionValues { name } }
       variants(first: 50) {
@@ -29,8 +31,9 @@ const PRODUCT_QUERY = `
   }
 `;
 
+
 @Component({
-  imports: [MoneyPipe, NgOptimizedImage, RouterLink, CodModal],
+  imports: [MoneyPipe, NgOptimizedImage, CodModal],
   selector: 'app-product',
   styleUrl: './product.css',
   templateUrl: './product.html',
@@ -42,6 +45,48 @@ const PRODUCT_QUERY = `
 export class Product {
   private readonly sf = inject(StorefrontClient);
 
+  private readonly seo = inject(SeoService);
+
+
+  private applySeo(p: ProductDetail) {
+    const vs = p.variants.nodes;
+    const v = vs.find((x) => x.availableForSale) ?? vs[0];
+    if (!v) return;
+
+    this.seo.set({
+      title: p.seo.title || p.title,
+      description: p.seo.description || p.description,
+      path: `/products/${p.handle}`,
+      image: p.images.nodes[0]?.url,
+      type: 'product',
+    });
+
+    this.seo.setJsonLd('page', {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: p.title,
+      description: p.description,
+      image: p.images.nodes.map((i) => i.url),
+      brand: { '@type': 'Brand', name: BRAND.name },
+      offers: {
+        '@type': 'Offer',
+        url: `https://auratechchile.cl/products/${p.handle}`,
+        priceCurrency: v.price.currencyCode,
+        price: Number(v.price.amount),
+        availability: v.availableForSale ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        itemCondition: 'https://schema.org/NewCondition',
+        shippingDetails: {
+          '@type': 'OfferShippingDetails',
+          shippingRate: { '@type': 'MonetaryAmount', value: 0, currency: 'CLP' },
+          shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'CL' },
+        },
+      },
+    });
+  }
+
+
+
+
   /** Llega desde la URL /products/:handle */
   readonly handle = input.required<string>();
 
@@ -51,6 +96,7 @@ export class Product {
         this.sf.request<{ product: ProductDetail | null }>(PRODUCT_QUERY, { handle }),
       ),
       map((d) => d.product),
+      tap((p) => p && this.applySeo(p)),   // ← SEO apenas llegan los datos
     ),
   );
 

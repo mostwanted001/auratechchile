@@ -40,6 +40,7 @@ export interface ProductDetail {
   images: { nodes: ShopifyImage[] };
   options: { name: string; optionValues: { name: string }[] }[];
   variants: { nodes: Variant[] };
+  seo: { title: string | null; description: string | null };
 }
 
 export interface CartLine {
@@ -66,4 +67,13 @@ export interface Cart {
 export interface UserError {
   field: string[] | null;
   message: string;
+}
+
+export interface ProductCard {
+  id: string;
+  handle: string;
+  title: string;
+  availableForSale: boolean;
+  featuredImage: ShopifyImage | null;
+  priceRange: { minVariantPrice: Money };
 }

@@ -10,4 +10,16 @@ export const routes: Routes = [
     path: 'politicas/:handle',
     loadComponent: () => import('./features/policy/policy').then((m) => m.Policy),
   },
+  {
+    path: 'collections/:handle',
+    loadComponent: () => import('./features/collection/collection').then((m) => m.Collection),
+  },
+  {
+    path: 'catalogo',
+    loadComponent: () => import('./features/collection/collection').then((m) => m.Collection),
+  },
+  {
+    path: 'contacto',
+    loadComponent: () => import('./features/contact/contact').then((m) => m.Contact),
+  },
 ];
