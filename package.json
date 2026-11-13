@@ -4,11 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && cp dist/aura-tech/browser/index.csr.html dist/aura-tech/browser/404.html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev": "node --env-file=.env node_modules/@angular/cli/bin/ng.js serve",
-    "serve:ssr:aura-tech": "node dist/aura-tech/server/server.mjs"
+    "serve:ssr:aura-tech": "node dist/aura-tech/server/server.mjs",
+    "build:local": "node --env-file=.env node_modules/@angular/cli/bin/ng.js build && cp dist/aura-tech/browser/index.csr.html dist/aura-tech/browser/404.html"
   },
   "private": true,
   "packageManager": "yarn@1.22.19",
@@ -29,6 +30,7 @@
     "@angular/build": "^22.0.5",
     "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.0",
+    "@cloudflare/workers-types": "^5.20261113.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
@@ -38,6 +40,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "wrangler": "^4.162.0"
   }
 }
