@@ -83,8 +83,11 @@ export class CodModal {
     });
 
     this.sending.set(false);
-    if (result.ok) this.orderName.set(result.orderName);
-    else this.serverError.set(result.error);
+    if ('error' in result) {
+      this.serverError.set(result.error);
+    } else {
+      this.orderName.set(result.orderName);
+    }
   }
 
   protected close() {
