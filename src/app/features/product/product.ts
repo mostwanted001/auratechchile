@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { CodModal } from './cod-modal/cod-modal';
 import { SeoService } from '../../core/seo/seo.service';
 import { BRAND } from '../../core/shopify/brands';
+import { MetaPixel } from '../../core/analytics/meta-pixel';
 
  const PRODUCT_QUERY = `
   query Product($handle: String!) @inContext(country: CL, language: ES) {
@@ -46,6 +47,7 @@ export class Product {
   private readonly sf = inject(StorefrontClient);
 
   private readonly seo = inject(SeoService);
+  private readonly pixel = inject(MetaPixel);
 
 
   private applySeo(p: ProductDetail) {
@@ -96,9 +98,13 @@ export class Product {
         this.sf.request<{ product: ProductDetail | null }>(PRODUCT_QUERY, { handle }),
       ),
       map((d) => d.product),
-      tap((p) => p && this.applySeo(p)),   // ← SEO apenas llegan los datos
-    ),
-  );
+      tap((p) => {
+        if (!p) return;
+        this.applySeo(p);
+        const v = p.variants.nodes.find((x) => x.availableForSale) ?? p.variants.nodes[0];
+        if (v) this.pixel.viewContent(p.id, v.id, p.title, v.price);   // ← SEO apenas llegan los datos
+    }),
+  ));
 
 
   protected readonly variant = computed(() => {
@@ -124,8 +130,11 @@ export class Product {
   protected readonly cart = inject(CartStore);
 
   protected addToCart() {
+    const p = this.product();
     const v = this.variant();
-    if (v) this.cart.add(v.id, this.quantity());
+    if (!p || !v) return;
+    this.cart.add(v.id, this.quantity());
+    this.pixel.addToCart(p.id, v.id, p.title, v.price, this.quantity());
   }
 
   protected buyNow() {

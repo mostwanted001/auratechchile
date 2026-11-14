@@ -5,6 +5,7 @@ import { CartStore } from './core/cart/cart.store';
 import { CartDrawer } from './shared/layout/cart-drawer/cart-drawer';
 import { Footer } from './shared/layout/footer/footer';
 import { WhatsappButton } from './shared/ui/whatsapp-button/whatsapp-button';
+import { MetaPixel } from './core/analytics/meta-pixel';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,15 @@ import { WhatsappButton } from './shared/ui/whatsapp-button/whatsapp-button';
 export class App {
 
   private readonly cart = inject(CartStore);
+  private readonly pixel = inject(MetaPixel);
+
+  protected readonly title = signal('aura-tech');
 
   constructor() {
     // El carrito es de cada visitante: se carga solo en el navegador, nunca en el SSR
-    afterNextRender(() => void this.cart.init());
+    afterNextRender(() => {
+      void this.cart.init();
+      this.pixel.init();
+    });
   }
-
-  protected readonly title = signal('aura-tech');
 }

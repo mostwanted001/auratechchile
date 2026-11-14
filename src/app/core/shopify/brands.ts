@@ -16,4 +16,5 @@ export const BRAND = {
       tiktok: 'https://www.tiktok.com/@auratechchile',
     },
     accountUrl: 'https://shopify.com/87959240897/account',
+    metaPixelId: '1467996185252164',
 } as const;
