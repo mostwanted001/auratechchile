@@ -5,10 +5,11 @@ import { NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map, tap } from 'rxjs';
 import { CartStore } from '../../../core/cart/cart.store';
+import { SearchOverlay } from '../search-overlay/search-overlay';
 
 
 @Component({
-  imports: [RouterLink, RouterLinkActive, NgOptimizedImage],
+  imports: [RouterLink, RouterLinkActive, NgOptimizedImage, SearchOverlay],
   selector: 'app-header',
   styleUrl: './header.css',
   templateUrl: './header.html',
@@ -37,7 +38,8 @@ export class Header {
   protected readonly isHome = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
-      tap(() => this.menuOpen.set(false)),           // cierra el menú al navegar
+      tap(() => { this.menuOpen.set(false); this.searchOpen.set(false); }),
+                // cierra el menú al navegar
       map(() => this.router.url.split('?')[0] === '/'),
     ),
     { initialValue: this.router.url.split('?')[0] === '/' },
@@ -50,6 +52,13 @@ export class Header {
 
   protected onScroll() {
     this.scrolled.set(window.scrollY > 24);
+  }
+
+  protected readonly searchOpen = signal(false);
+
+  protected openSearch() {
+    this.menuOpen.set(false);
+    this.searchOpen.set(true);
   }
 
 }

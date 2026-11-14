@@ -22,4 +22,5 @@ export const routes: Routes = [
     path: 'contacto',
     loadComponent: () => import('./features/contact/contact').then((m) => m.Contact),
   },
+  { path: 'buscar', loadComponent: () => import('./features/search/search').then((m) => m.Search) },
 ];

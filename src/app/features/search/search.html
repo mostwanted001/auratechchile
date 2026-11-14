@@ -1,0 +1,28 @@
+<section class="mx-auto max-w-7xl px-5 py-10 md:py-14">
+  <p class="text-xs font-semibold tracking-[.2em] text-aura-blue uppercase">Búsqueda</p>
+  <h1 class="mt-2 text-3xl md:text-4xl">
+    @if (q()) { Resultados para "{{ q() }}" } @else { Buscar productos }
+  </h1>
+
+  @if (results(); as r) {
+    <p class="mt-2 text-navy-400">{{ r.totalCount }} {{ r.totalCount === 1 ? 'producto' : 'productos' }}</p>
+
+    @if (r.nodes.length) {
+      <div class="mt-8 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+        @for (p of r.nodes; track p.id; let i = $index) {
+          <app-product-card [product]="p" [priority]="i < 4" />
+        }
+      </div>
+    } @else {
+      <div class="py-16 text-center">
+        <p class="text-lg font-semibold text-navy-900">No encontramos productos</p>
+        <p class="mt-1 text-navy-400">Prueba con otra palabra o revisa el catálogo completo.</p>
+        <a routerLink="/catalogo" class="btn-cta mt-6">Ver catálogo</a>
+      </div>
+    }
+  } @else if (q()) {
+    <div class="mt-8 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+      @for (_ of [1, 2, 3, 4]; track $index) { <div class="aspect-square animate-pulse rounded-card bg-navy-50"></div> }
+    </div>
+  }
+</section>

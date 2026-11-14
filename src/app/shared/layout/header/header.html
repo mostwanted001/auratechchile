@@ -18,7 +18,7 @@
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
       </button>
-      <button type="button" class="icon-btn" aria-label="Buscar">
+      <button (click)="openSearch()" type="button" class="icon-btn" aria-label="Buscar">
         <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
         </svg>
@@ -46,7 +46,7 @@
 
     <!-- Derecha: (búsqueda en desktop) + cuenta + carrito -->
     <div class="col-start-3 row-start-1 flex items-center gap-1 justify-self-end">
-      <button type="button" class="icon-btn hidden lg:grid" aria-label="Buscar">
+      <button (click)="openSearch()" type="button" class="icon-btn hidden lg:grid" aria-label="Buscar">
         <svg viewBox="0 0 24 24" class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
           <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
         </svg>
@@ -101,4 +101,9 @@
       <p>Envío gratis a todo Chile</p>
     </div>
   </aside>
+
+
+}
+@if (searchOpen()) {
+  <app-search-overlay (closed)="searchOpen.set(false)" />
 }

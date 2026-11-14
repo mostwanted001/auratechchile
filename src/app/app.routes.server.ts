@@ -64,4 +64,6 @@ export const serverRoutes: ServerRoute[] = [
 
   // Cualquier otra ruta (por ejemplo, 404): se arma en el navegador
   { path: '**', renderMode: RenderMode.Client },
+
+  { path: 'buscar', renderMode: RenderMode.Prerender },
 ];
