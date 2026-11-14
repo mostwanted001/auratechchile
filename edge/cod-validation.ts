@@ -120,6 +120,9 @@ export async function createCodOrder(input: unknown, deps: CodDeps): Promise<Cod
       return { status: 409, body: { ok: false, error: 'Este producto no está disponible en este momento.' } };
     }
 
+    const qty = quantity as number;               // ya validada arriba
+    const lineTotal = String(Number(v.price) * qty);
+
     // 5. Crear el pedido (con o sin teléfono en los campos validados por Shopify)
     const createOrder = (withPhone: boolean) => {
       const address = {
@@ -134,15 +137,15 @@ export async function createCodOrder(input: unknown, deps: CodDeps): Promise<Cod
           ...(withPhone ? { phone } : {}),
           lineItems: [{
             variantId: v.id,
-            quantity,
-            requiresShipping: true,
+            quantity: qty,
+            requiresShipping: true, // sin esto, Shopify marca "No se requiere envío"
             priceSet: { shopMoney: { amount: v.price, currencyCode: 'CLP' } },
           }],
           transactions: [{
             kind: 'SALE',
             status: 'PENDING',
-            gateway: 'Cash on Delivery (COD)',
-            amountSet: { shopMoney: { amount: String(Number(v.price) * quantity), currencyCode: 'CLP' } },
+            gateway: 'Cash on Delivery (COD)', // mismo método que usaba Releasit
+            amountSet: { shopMoney: { amount: lineTotal, currencyCode: 'CLP' } },
             test: deps.testMode,
           }],
           shippingAddress: address,
@@ -158,6 +161,7 @@ export async function createCodOrder(input: unknown, deps: CodDeps): Promise<Cod
         options: { inventoryBehaviour: 'DECREMENT_OBEYING_POLICY', sendReceipt: true },
       });
     };
+
 
     let { orderCreate } = await createOrder(true);
 
