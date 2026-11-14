@@ -135,7 +135,15 @@ export async function createCodOrder(input: unknown, deps: CodDeps): Promise<Cod
           lineItems: [{
             variantId: v.id,
             quantity,
+            requiresShipping: true,
             priceSet: { shopMoney: { amount: v.price, currencyCode: 'CLP' } },
+          }],
+          transactions: [{
+            kind: 'SALE',
+            status: 'PENDING',
+            gateway: 'Cash on Delivery (COD)',
+            amountSet: { shopMoney: { amount: String(Number(v.price) * quantity), currencyCode: 'CLP' } },
+            test: deps.testMode,
           }],
           shippingAddress: address,
           billingAddress: address,

@@ -111,6 +111,7 @@
 
   @if (codOpen() && variant(); as v) {
     <app-cod-modal
+      [productId]="p.id"
       [variantId]="v.id"
       [title]="p.title"
       [price]="v.price"

@@ -8,6 +8,7 @@ import { CodService } from '../../../core/cod/cod.service';
 import { REGIONES } from '../../../core/cod/regiones';
 import { Money, ShopifyImage } from '../../../core/shopify/types';
 import { MoneyPipe } from '../../../shared/ui/product-card/money.pipe';
+import { MetaPixel } from '../../../core/analytics/meta-pixel';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { MoneyPipe } from '../../../shared/ui/product-card/money.pipe';
 export class CodModal {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly cod = inject(CodService);
-
+  private readonly pixel = inject(MetaPixel);
   // Datos del producto que vienen de la página de producto
   readonly variantId = input.required<string>();
   readonly title = input.required<string>();
@@ -28,6 +29,8 @@ export class CodModal {
   readonly image = input<ShopifyImage | null>(null);
   readonly initialQty = input(1);
   readonly closed = output<void>();
+
+  readonly productId = input.required<string>();
 
   protected readonly regiones = REGIONES;
   protected readonly qty = signal(1);
@@ -56,6 +59,7 @@ export class CodModal {
 
   ngOnInit() {
     this.qty.set(this.initialQty());
+    this.pixel.initiateCheckout(this.productId(), this.variantId(), this.total(), this.qty());
   }
 
   protected changeQty(d: number) {
@@ -86,7 +90,8 @@ export class CodModal {
     if ('error' in result) {
       this.serverError.set(result.error);
     } else {
-      this.orderName.set(result.orderName);
+      this.orderName.set(result.orderName);this.pixel.purchase(this.productId(), this.variantId(), this.total(), this.qty(), result.orderName);
+
     }
   }
 
