@@ -18,7 +18,7 @@ export class Guarantees {
       icon: 'M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Z M9 12l2 2 4-4',
     },
     {
-      title: '30 días para devolver',
+      title: '10 días para devolver',
       text: 'Si no te convence, lo devuelves',
       icon: 'M3 12a9 9 0 1 0 3-6.7 M3 4v5h5',
     },

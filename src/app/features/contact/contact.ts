@@ -42,7 +42,7 @@ export class Contact {
     },
     {
       q: '¿Puedo devolver un producto?',
-      a: 'Sí. Tienes 30 días desde que lo recibes para devolverlo por arrepentimiento, y garantía legal de 6 meses si presenta fallas.',
+      a: 'Sí. Tienes 10 días desde que lo recibes para devolverlo por arrepentimiento, y garantía legal de 6 meses si presenta fallas.',
     },
   ];
 }
